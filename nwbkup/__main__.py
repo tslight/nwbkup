@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 import argparse
-import csv
-import datetime
 import os
 from .nwbkup import parse_csv
 from .nwbkup import backup_device

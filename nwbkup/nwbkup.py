@@ -94,11 +94,11 @@ def write_log(path):
     logfile = datetime.datetime.now().strftime('nw_bot_log'"%b_%d_%H.%M"'.csv')
     logpath = path + logfile
     try:
-        with open(logpath, 'w') as csvFile:
-            writer = csv.writer(csvFile)
+        with open(logpath, 'w') as csv_file:
+            writer = csv.writer(csv_file)
             writer.writerow(["IP", "Status"])
             for x in range(len(LOG)):
                 writer.writerow(LOG[x].split(' ', 1))
-                csvFile.close()
+                csv_file.close()
     except IOError:
         print("I/O Error.")
