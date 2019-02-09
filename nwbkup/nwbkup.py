@@ -12,28 +12,43 @@ LOG = []
 
 
 def backup_device(target_details):
+    """
+    Takes a tuple or list of device details as an argument. First element is the
+    connection object returned from ConnectHandler, second element is the backup
+    command to run, third is the IP address of the device and the last is the
+    string from the command's output that we are looking for to gauge success.
+
+    Runs the command using the connection object and appends success status to
+    log based on return string from command and IP address.
+    """
     netmiko_exceptions = (netmiko.ssh_exception.NetMikoTimeoutException,
                           netmiko.ssh_exception.NetMikoAuthenticationException)
     connection = target_details[0]
     command = target_details[1]
-    ip = target_details[2]
+    ipaddr = target_details[2]
     success_string = target_details[3]
     try:
         connection.enable()
         output = connection.send_command(command)
         if success_string not in output:
-            LOG.append("%s Failed Backup" % (ip))
+            LOG.append("%s Failed Backup" % (ipaddr))
         else:
-            LOG.append("%s Backup OK" % (ip))
-    except (netmiko_exceptions) as e:
-        LOG.append("%s %s" % (ip, e))
+            LOG.append("%s Backup OK" % (ipaddr))
+    except (netmiko_exceptions) as exception:
+        LOG.append("%s %s" % (ipaddr, exception))
 
 
-def get_target_details(target, ip):
+def get_target_details(target, ipaddr):
+    """
+    Takes device name and ip address as arguments and transforms them into a
+    tuple containing a hashtable with device details, the command one wants to
+    run on the device, it's IP address and a string to gauge the success of the
+    command by.
+    """
     if target == "cisco":
         device = {
             'device_type': 'cisco_ios',
-            'ip': ip,
+            'ip': ipaddr,
             'username': 'c',
             'password': 'c',
             'secret': 'cisco',
@@ -41,64 +56,69 @@ def get_target_details(target, ip):
         connection = netmiko.ConnectHandler(device)
         command = "copy running tftp://%s%s%s.cfg" % (
             BACKUPSRV, CONFIGPATH, connection.base_prompt.strip())
-        ip = device['ip']
         success_string = " bytes copied in "
     elif target == "fortigate":
         device = {
             'device_type': 'fortinet',
-            'ip': ip,
+            'ip': ipaddr,
             'username': 'admin',
             'password': '',
         }
         connection = netmiko.ConnectHandler(device)
         command = "execute backup full-config tftp %s%s.cfg %s" % (
             CONFIGPATH, connection.base_prompt.strip(), BACKUPSRV)
-        ip = device['ip']
         success_string = "Send config file to tftp server OK."
     elif target == "hp":
         device = {
             'device_type': 'hp_procurve',
-            'ip': ip,
+            'ip': ipaddr,
             'username': 'hp',
             'password': 'hp',
         }
         connection = netmiko.ConnectHandler(device)
         command = "copy running tftp %s %s%s.cfg" % (
             BACKUPSRV, CONFIGPATH, connection.base_prompt.strip())
-        ip = device['ip']
         success_string = "error"
     else:
-        LOG.append("%s device type not found" % (ip))
+        LOG.append("%s device type not found" % (ipaddr))
 
-    return (connection, command, ip, success_string)
+    return (connection, command, ipaddr, success_string)
 
 
-def parse_csv(csv):
+def parse_csv(csvpath):
+    """
+    Takes csv file as an argument, iterates over each row, to get a list of
+    targets based on the device and IP columns of the csv, using
+    get_target_details.
+    """
     targets = []
     try:
-        with open(csv, 'rb') as csvfile:
+        with open(csvpath, 'rb') as csvfile:
             file_reader = csv.DictReader(csvfile, delimiter=',', quotechar='|')
             for row in file_reader:
-                target = row['cmdfor'].lower()
-                ip = row['ip']
-                target_details = get_target_details(target, ip)
+                target = row['Device'].lower()
+                ipaddr = row['IP']
+                target_details = get_target_details(target, ipaddr)
                 targets.append(target_details)
     except IOError:
         print("Error: File does not appear to exist.")
 
-    if targets:
-        return targets
+    return targets
 
 
 def write_log(path):
+    """
+    Takes a filesystem path as an argument, and creates a csv using our log
+    list. Each element of the list is a row in the csv.
+    """
     logfile = datetime.datetime.now().strftime('nw_bot_log'"%b_%d_%H.%M"'.csv')
     logpath = path + logfile
     try:
         with open(logpath, 'w') as csv_file:
             writer = csv.writer(csv_file)
             writer.writerow(["IP", "Status"])
-            for x in range(len(LOG)):
-                writer.writerow(LOG[x].split(' ', 1))
+            for row in enumerate(LOG):
+                writer.writerow(LOG[row].split(' ', 1))
                 csv_file.close()
     except IOError:
         print("I/O Error.")
