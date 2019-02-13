@@ -23,10 +23,7 @@ def backup_device(target_details):
     """
     netmiko_exceptions = (netmiko.ssh_exception.NetMikoTimeoutException,
                           netmiko.ssh_exception.NetMikoAuthenticationException)
-    connection = target_details[0]
-    command = target_details[1]
-    ipaddr = target_details[2]
-    success_string = target_details[3]
+    connection, command, ipaddr, success_string = target_details
     try:
         connection.enable()
         output = connection.send_command(command)

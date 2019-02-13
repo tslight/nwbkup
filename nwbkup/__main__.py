@@ -49,7 +49,7 @@ def getargs():
     return parser.parse_args()
 
 
-def nwbkup():
+def main():
     args = getargs()
     targets = parse_csv(args.csvpath)
     if targets:
@@ -59,4 +59,4 @@ def nwbkup():
 
 
 if __name__ == '__main__':
-    nwbkup()
+    main()
