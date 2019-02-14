@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import os
+import multiprocessing
 from .nwbkup import parse_csv
 from .nwbkup import backup_device
 from .nwbkup import write_log
@@ -53,9 +54,14 @@ def main():
     args = getargs()
     targets = parse_csv(args.csvpath)
     if targets:
+        processes = []
         for t in targets:
-            backup_device(t)
-            write_log(args.logpath)
+            p = multiprocessing.Process(target=backup_device, args=(t,))
+            processes.append(p)
+            p.start()
+        for p in processes:
+            p.join()
+        write_log(args.logpath)
 
 
 if __name__ == '__main__':
