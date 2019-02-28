@@ -7,14 +7,15 @@ signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # IOError: Broken pipe
 signal.signal(signal.SIGINT, signal.SIG_DFL)  # KeyboardInterrupt: Ctrl-C
 
 
-def print_device(device, connection, command):
-    print("DEVICE TYPE: {}".format(device['device_type']),
+def print_device(device, connection, cmd):
+    print("Success!"
+          "\nDEVICE TYPE: {}".format(device['device_type']),
           "\nIP ADDRESS: {}".format(device['ip']),
           "\nHOSTNAME: {}".format(connection.base_prompt),
-          "\nCOMMAND: {}\n".format(command))
+          "\nCOMMAND: {}\n".format(cmd))
 
 
-def get_target_details(target, ipaddr):
+def get_target_details(target, ip):
     """
     Takes device name and ip address as arguments and transforms them into a
     tuple containing a hashtable with device details, the command one wants to
@@ -26,56 +27,56 @@ def get_target_details(target, ipaddr):
     if target == "cisco":
         device = {
             'device_type': 'cisco_ios',
-            'ip': ipaddr,
+            'ip': ip,
             'username': 'netseract',
             'password': 'C0mpl77xyeKK',
             'timeout': 5,
         }
         try:
             connection = netmiko.ConnectHandler(**device)
-            command = "copy running tftp://%s%s%s.cfg" % (
-                server, path, connection.base_prompt.strip())
-            success_string = " bytes copied in "
-            print_device(device, connection, command)
+            cmd = ("copy running tftp://{}{}{}.cfg".format(
+                server, path, connection.base_prompt.strip()))
+            success = " bytes copied in "
+            print_device(device, connection, cmd)
         except Exception as e:
             raise e
     elif target == "fortigate":
         device = {
             'device_type': 'fortinet',
-            'ip': ipaddr,
+            'ip': ip,
             'username': 'netseract',
             'password': 'C0mpl77xyeKK',
             'timeout': 5,
         }
         try:
             connection = netmiko.ConnectHandler(**device)
-            command = "execute backup full-config tftp %s%s.cfg %s" % (
+            cmd = "execute backup full-config tftp %s%s.cfg %s" % (
                 path, connection.base_prompt.strip(), server)
-            success_string = "Send config file to tftp server OK."
-            print_device(device, connection, command)
+            success = "Send config file to tftp server OK."
+            print_device(device, connection, cmd)
         except Exception as e:
             raise e
     elif target == "hp":
         device = {
             'device_type': 'hp_procurve',
-            'ip': ipaddr,
+            'ip': ip,
             'username': 'netseract',
             'password': 'C0mpl77xyeKK',
             'timeout': 5,
         }
         try:
             connection = netmiko.ConnectHandler(**device)
-            command = "copy running tftp %s %s%s.cfg" % (
+            cmd = "copy running tftp %s %s%s.cfg" % (
                 server, path, connection.base_prompt.strip())
-            success_string = "TFTP download in progress."
-            print_device(device, connection, command)
+            success = "TFTP download in progress."
+            print_device(device, connection, cmd)
         except Exception as e:
             raise e
     else:
         raise ValueError(
-            "{} device at {} not supported".format(target, ipaddr))
+            "{} device at {} not supported".format(target, ip))
 
-    return (connection, command, ipaddr, success_string)
+    return (connection, cmd, success)
 
 
 def parse_csv(csvpath):
@@ -90,13 +91,13 @@ def parse_csv(csvpath):
         print("\nGetting devices from {}...\n".format(csvpath))
         for row in file_reader:
             target = row['device'].lower()
-            ipaddr = row['ip'].lower()
-            print("Found {} at {}. Attempting to connect...".format(
-                target, ipaddr))
+            ip = row['ip'].lower()
+            print("Testing connection to {} at {}...".format(
+                target, ip), end=" ")
             try:
-                target_details = get_target_details(target, ipaddr)
+                target_details = get_target_details(target, ip)
                 targets.append(target_details)
             except Exception as exception:
-                print("{}\n".format(exception))
+                print("Failed!\n{}\n".format(exception))
 
     return targets

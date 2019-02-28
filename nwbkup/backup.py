@@ -16,21 +16,18 @@ def backup_device(target_details):
     Runs the command using the connection object and appends success status to
     log based on return string from command and IP address.
     """
-    connection, command, ipaddr, success_string = target_details
+    connection, cmd, success = target_details
     print("Backing up {} at {}...".format(
         connection.device_type, connection.ip))
     try:
         connection.enable()
-        output = connection.send_command(command)
-        if success_string not in output:
-            msg = ("Failed to run {} on {}.\n{}".format(
-                command, ipaddr, output))
+        output = connection.send_command(cmd)
+        if success not in output:
+            msg = ("Failed to run {}.\n{}".format(cmd, output))
         else:
-            msg = ("Successfully ran {} on {}.\n".format(
-                command, ipaddr))
-    except Exception as exception:
-        msg = ("Exception raised running {} on {}:\n{}\n".format
-               (command, ipaddr, exception))
+            msg = ("Successfully ran {}.\n".format(cmd))
+    except Exception as e:
+        msg = ("Exception raised running {}:\n{}\n".format(cmd, e))
 
     print(msg)
     return msg

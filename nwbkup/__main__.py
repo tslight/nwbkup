@@ -2,9 +2,8 @@
 import argparse
 import os
 # import multiprocessing
-from .parse_csv import parse_csv
-from .nwbkup import backup_device
-from .write_log import write_log
+from .targets import parse_csv
+from .backup import backup_device
 
 
 def chkfile(path):
