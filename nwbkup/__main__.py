@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import argparse
 import os
-import multiprocessing
-from .nwbkup import parse_csv
+# import multiprocessing
+from .parse_csv import parse_csv
 from .nwbkup import backup_device
-from .nwbkup import write_log
+from .write_log import write_log
 
 
 def chkfile(path):
@@ -51,17 +51,21 @@ def getargs():
 
 
 def main():
+    # log = []
     args = getargs()
-    targets = parse_csv(args.csvpath)
+    targets = parse_csv(args.csv)
     if targets:
-        processes = []
+        print("Attempting to backup devices...\n")
+        # processes = []
         for t in targets:
-            p = multiprocessing.Process(target=backup_device, args=(t,))
-            processes.append(p)
-            p.start()
-        for p in processes:
-            p.join()
-        write_log(args.logpath)
+            backup_device(t)
+            #     p = multiprocessing.Process(target=backup_device, args=(t,))
+            #     processes.append(p)
+            #     p.start()
+            # for p in processes:
+            #     p.join()
+    # if log:
+    #     write_log(args.log, log)
 
 
 if __name__ == '__main__':
