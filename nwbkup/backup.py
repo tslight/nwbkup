@@ -33,4 +33,3 @@ def backup_device(target_details):
         msg = ("Failed!\nCOMMAND: {}\nERROR: {}\n".format(cmd, e))
 
     print(msg)
-    return msg

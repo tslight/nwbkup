@@ -46,7 +46,7 @@ def get_target_details(target, ip):
             'ip': ip,
             'username': 'netseract',
             'password': 'C0mpl77xyeKK',
-            'timeout': 5,
+            'timeout': 10,
         }
         try:
             connection = netmiko.ConnectHandler(**device)
