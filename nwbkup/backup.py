@@ -1,6 +1,7 @@
 import datetime
 import signal
 import netmiko
+import re
 
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # IOError: Broken pipe
 signal.signal(signal.SIGINT, signal.SIG_DFL)  # KeyboardInterrupt: Ctrl-C
@@ -17,17 +18,19 @@ def backup_device(target_details):
     log based on return string from command and IP address.
     """
     connection, cmd, success = target_details
+    regex = ".*error.*|.*failed.*"
     print("Backing up {} at {}...".format(
-        connection.device_type, connection.ip))
+        connection.device_type, connection.ip), end=" ")
     try:
         connection.enable()
         output = connection.send_command(cmd)
-        if success not in output:
-            msg = ("Failed to run {}.\n{}".format(cmd, output))
+        failed = re.match(regex, output, re.IGNORECASE)
+        if success not in output or failed:
+            msg = ("Failed!\nCOMMAND: {}\nERROR: {}".format(cmd, output))
         else:
-            msg = ("Successfully ran {}.\n".format(cmd))
+            msg = ("Success!\nCOMMAND: {}\n".format(cmd))
     except Exception as e:
-        msg = ("Exception raised running {}:\n{}\n".format(cmd, e))
+        msg = ("Failed!\nCOMMAND: {}\nERROR: {}\n".format(cmd, e))
 
     print(msg)
     return msg
