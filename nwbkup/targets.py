@@ -1,8 +1,7 @@
-import csv
 import datetime
 import signal
 import netmiko
-from .backup import backup_device
+from .backup import backup
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # IOError: Broken pipe
 signal.signal(signal.SIGINT, signal.SIG_DFL)  # KeyboardInterrupt: Ctrl-C
 
@@ -80,32 +79,5 @@ def get_target_details(target):
     else:
         return "{} device at {} not supported".format(device, ip)
 
-    msg += backup_device(connection, cmd, success)
+    msg += backup(connection, cmd, success)
     return msg
-
-
-def parse_csv(csvpath):
-    # from multiprocessing import Pool
-    from multiprocessing.pool import ThreadPool
-    """
-    Takes csv file as an argument, iterates over each row, to get a list of
-    targets based on the device and IP columns of the csv, using
-    get_target_details.
-    """
-    targets = []
-    with open(csvpath, 'r') as csvfile:
-        file_reader = csv.DictReader(csvfile, delimiter=',', quotechar='|')
-        print("\nGetting devices from {}...\n".format(csvpath))
-        for row in file_reader:
-            device = row['device'].lower()
-            ip = row['ip'].lower()
-            target = (device, ip)
-            targets.append(target)
-
-    pool = ThreadPool(8)
-    details = pool.imap(get_target_details, targets)
-    pool.close()
-    pool.join()
-
-    for d in details:
-        print(d)

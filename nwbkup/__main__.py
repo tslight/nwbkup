@@ -1,7 +1,8 @@
 import argparse
 import os
 from .targets import parse_csv
-from .backup import backup_device
+from .backup import backup
+from multiprocessing.pool import ThreadPool
 
 
 def chkfile(path):
@@ -51,11 +52,13 @@ def main():
     # log = []
     args = getargs()
     targets = parse_csv(args.csv)
-    exit()
     if targets:
-        print("Attempting to backup devices...\n")
-        for t in targets:
-            backup_device(t)
+        pool = ThreadPool(8)
+        results = pool.imap(backup, targets)
+        pool.close()
+        pool.join()
+        for r in results:
+            print(r)
 
 
 if __name__ == '__main__':

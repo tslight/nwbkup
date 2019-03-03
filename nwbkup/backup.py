@@ -1,10 +1,4 @@
-import datetime
-import signal
-import netmiko
 import re
-
-signal.signal(signal.SIGPIPE, signal.SIG_DFL)  # IOError: Broken pipe
-signal.signal(signal.SIGINT, signal.SIG_DFL)  # KeyboardInterrupt: Ctrl-C
 
 
 def chkout(cmd, output, success):
@@ -17,7 +11,7 @@ def chkout(cmd, output, success):
     return msg
 
 
-def backup_device(connection, cmd, success):
+def backup(connection, cmd, success):
     """
     Takes a tuple or list of device details as an argument. First
     element is the connection object returned from ConnectHandler,
