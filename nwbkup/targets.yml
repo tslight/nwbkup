@@ -1,0 +1,5 @@
+device_type: 'cisco_ios'
+ip: '192.168.0.0'
+username: 'netseract'
+password: 'C0mpl77xyeKK'
+timeout: 5
