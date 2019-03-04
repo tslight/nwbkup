@@ -1,7 +1,9 @@
 import argparse
 import os
-from .targets import parse_csv
-from .backup import backup
+from .parse import parse_csv
+from .connect import connect_and_backup
+from .results import parse_results
+from .results import write_log
 from multiprocessing.pool import ThreadPool
 
 
@@ -54,11 +56,13 @@ def main():
     targets = parse_csv(args.csv)
     if targets:
         pool = ThreadPool(8)
-        results = pool.imap(backup, targets)
+        results = pool.imap(connect_and_backup, targets)
         pool.close()
         pool.join()
-        for r in results:
-            print(r)
+
+    if results:
+        results = parse_results(results)
+        write_log(results, args.log)
 
 
 if __name__ == '__main__':

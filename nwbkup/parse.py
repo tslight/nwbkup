@@ -12,7 +12,13 @@ def parse_csv(csvpath):
         file_reader = csv.DictReader(csvfile, delimiter=',', quotechar='|')
         print("\nGetting devices from {}...\n".format(csvpath))
         for row in file_reader:
-            device = row['device'].lower()
-            ip = row['ip'].lower()
-            target = (device, ip)
-            targets.append(target)
+            device = {
+                'device_type': row['device'].lower(),
+                'ip': row['ip'].lower(),
+                'username': row['username'],
+                'password': row['password'],
+                'timeout': int(row['timeout']),
+            }
+            targets.append(device)
+
+    return targets
