@@ -20,7 +20,7 @@ def write_log(results, path):
             for key, value in results.items():
                 writer.writerow([key, value])
             csv_file.close()
-        print("\nSuccessfully wrote results to {}".format(logpath))
+        print("\nSuccessfully wrote results to {}\n".format(logpath))
     except IOError:
         print("I/O Error.")
 
