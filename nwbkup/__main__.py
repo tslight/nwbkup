@@ -55,21 +55,21 @@ def getargs():
                         default="./devices.csv",
                         type=chkfile,
                         help="a valid path to a csv file.")
-    parser.add_argument("-l", "--log",
+    parser.add_argument("-r", "--results",
                         nargs='?',
                         default=".",
                         type=chkdir,
-                        help="a valid path to store the log csv in.")
+                        help="Path to store the results csv in.")
     parser.add_argument("-s", "--server",
                         nargs='?',
                         default="10.1.0.6",
                         type=chkip,
-                        help="A valid IP or hostname to send the backups to.")
+                        help="TFTP IP or hostname to send the backups to.")
     parser.add_argument("-p", "--path",
                         nargs='?',
                         default="/Network",
                         type=str,
-                        help="server path to send the backups to.")
+                        help="TFTP path to send the backups to.")
     return parser.parse_args()
 
 
@@ -88,7 +88,7 @@ def main():
 
     if results:
         results = parse_results(results)
-        write_log(results, args.log)
+        write_log(results, args.results)
 
 
 if __name__ == '__main__':
