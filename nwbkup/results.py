@@ -2,11 +2,10 @@
 Process results
 """
 import csv
-import re
 import datetime
 
 
-def write_destination_csv(results, path):
+def write_results(results, path):
     """
     Takes a filesystem path as an argument, and creates a csv using the results
     dictionary from parse_results.
@@ -25,29 +24,10 @@ def write_destination_csv(results, path):
         print("I/O Error.")
 
 
-def parse_results(results):
+def print_results(results):
     """
     Extract IP address from results and add to dictionary where key is IP
     address and the the value is whether the command completed successfully.
     """
-    new_results = []
     for result in results:
-        print(result)
-        new_result = []
-        device = re.search('to (.+?) at', result)
-        device = device.group(1)
-        new_result.append(device)
-        ipaddr = re.search('at (.+?)\\.\\.\\.', result)
-        ipaddr = ipaddr.group(1)
-        new_result.append(ipaddr)
-        if "Failed" in result:
-            error = re.search('Failed\\!\\n(.+?)$', result)
-            error = error.group(1)
-            new_result.append("Failed")
-            new_result.append(error)
-        else:
-            new_result.append("Success")
-            new_result.append("")
-        new_results.append(new_result)
-
-    return new_results
+        print("\nBackup up {} at {}... {}\n{}".format(*result))

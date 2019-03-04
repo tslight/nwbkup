@@ -8,8 +8,8 @@ from multiprocessing.pool import ThreadPool
 from functools import partial
 from .parse import parse_csv
 from .connect import connect_and_backup
-from .results import parse_results
-from .results import write_destination_csv
+from .results import print_results
+from .results import write_results
 
 
 def chkfile(path):
@@ -90,8 +90,8 @@ def main():
         pool.join()
 
     if results:
-        results = parse_results(results)
-        write_destination_csv(results, args.destination)
+        results = print_results(results)
+        write_results(results, args.destination)
 
 
 if __name__ == '__main__':

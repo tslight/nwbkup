@@ -12,10 +12,8 @@ def chkout(output, success):
     regex = ".*error.*|.*failed.*"
     failed = re.match(regex, output, re.IGNORECASE)
     if success not in output or failed:
-        msg = ("Failed!\n{}".format(output))
-    else:
-        msg = ("Success!\n")
-    return msg
+        return ["Failed", output]
+    return ["Success", ""]
 
 
 def backup(connection, cmd, success):
@@ -29,13 +27,11 @@ def backup(connection, cmd, success):
     Runs the command using the connection object and appends success status to
     log based on return string from command and IP address.
     """
-    msg = ("Backing up {} at {}... ".format(
-        connection.device_type, connection.ip))
     try:
         connection.enable()
         output = connection.send_command(cmd)
-        msg += chkout(output, success)
+        result = chkout(output, success)
     except Exception as error:
-        msg += ("Failed!\n{}".format(error))
+        result = ["Failed", error]
 
-    return msg
+    return result

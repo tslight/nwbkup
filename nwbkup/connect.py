@@ -14,21 +14,22 @@ def connect_and_backup(server, path, target):
     tuple containing the connection object, the command one wants to run on the
     device, and a string to gauge the success of the command by.
     """
-    msg = ("Connecting to {} at {}... ".format(
-        target['device_type'], target['ip']))
+    result = [target['device_type'], target['ip']]
     path = datetime.datetime.now().strftime(path + "/%Y/%b/")
 
     try:
         connection = netmiko.ConnectHandler(**target)
         cmd = get_backup_cmd(connection, server, path)
         success = get_backup_success(connection)
-        msg += "Success!\n"
-        msg += backup(connection, cmd, success)
+        backup_result = backup(connection, cmd, success)
+        result = result + backup_result
     except ValueError:
-        msg += "Failed!\n{} not supported.".format(target['device_type'])
+        error = "{} not supported.".format(target['device_type'])
+        result = result + ["Failed", error]
     except KeyError:
-        msg += "Failed!\nCannot find {}.".format(target['device_type'])
+        error = "Cannot find {}.".format(target['device_type'])
+        result = result + ["Failed", error]
     except Exception as error:
-        msg += error
+        result = result + ["Failed", error]
 
-    return msg
+    return result
