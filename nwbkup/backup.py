@@ -36,6 +36,6 @@ def backup(connection, cmd, success):
         output = connection.send_command(cmd)
         msg += chkout(output, success)
     except Exception as error:
-        msg += ("Failed!\n{}\n".format(error))
+        msg += ("Failed!\n{}".format(error))
 
     return msg

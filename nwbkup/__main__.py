@@ -9,7 +9,7 @@ from functools import partial
 from .parse import parse_csv
 from .connect import connect_and_backup
 from .results import parse_results
-from .results import write_log
+from .results import write_destination_csv
 
 
 def chkfile(path):
@@ -90,7 +90,7 @@ def main():
 
     if results:
         results = parse_results(results)
-        write_log(results, args.destination)
+        write_destination_csv(results, args.destination)
 
 
 if __name__ == '__main__':
