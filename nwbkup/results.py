@@ -1,3 +1,6 @@
+"""
+Process results
+"""
 import csv
 import re
 import datetime
@@ -28,13 +31,13 @@ def parse_results(results):
     address and the the value is whether the command completed successfully.
     """
     new_results = {}
-    for r in results:
-        print(r)
-        ip = re.search("at (.+?)\.\.\.", r)
-        ip = ip.group(1)
-        if "Failed" in r:
-            new_results[ip] = "Failed"
+    for result in results:
+        print(result)
+        found = re.search('at (.+?)\\.\\.\\.', result)
+        ipaddr = found.group(1)
+        if "Failed" in result:
+            new_results[ipaddr] = "Failed"
         else:
-            new_results[ip] = "Success"
+            new_results[ipaddr] = "Success"
 
     return new_results

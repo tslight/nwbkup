@@ -1,40 +1,33 @@
+"""
+Parse arguments and implement threading
+"""
 import argparse
 import os
+from multiprocessing.pool import ThreadPool
 from .parse import parse_csv
 from .connect import connect_and_backup
 from .results import parse_results
 from .results import write_log
-from multiprocessing.pool import ThreadPool
 
 
 def chkfile(path):
     """
     Checks for valid file path.
     """
-    if os.path.exists(path):
-        if os.path.isfile(path):
-            return path
-        else:
-            msg = "{0} is not a file.".format(path)
-    else:
-        msg = "{0} does not exist.".format(path)
-
-    raise argparse.ArgumentTypeError(msg)
+    if not os.path.isfile(path):
+        msg = "{0} is not a file.".format(path)
+        raise argparse.ArgumentTypeError(msg)
+    return path
 
 
 def chkdir(path):
     """
     Checks for valid directory path.
     """
-    if os.path.exists(path):
-        if os.path.isdir(path):
-            return path
-        else:
-            msg = "{0} is not a directory.".format(path)
-    else:
-        msg = "{0} does not exist.".format(path)
-
-    raise argparse.ArgumentTypeError(msg)
+    if not os.path.isdir(path):
+        msg = "{} is not a directory.".format(path)
+        raise argparse.ArgumentTypeError(msg)
+    return path
 
 
 def getargs():
@@ -51,6 +44,9 @@ def getargs():
 
 
 def main():
+    """
+    Main function
+    """
     args = getargs()
     targets = parse_csv(args.csv)
     if targets:

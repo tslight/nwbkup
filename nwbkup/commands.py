@@ -1,3 +1,8 @@
+"""
+Define commands to be run on different devices
+"""
+
+
 def get_backup_cmd(connection, server, path):
     """
     Return a backup command that corresponds to the connection objects

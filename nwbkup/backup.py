@@ -1,3 +1,6 @@
+"""
+Backup device
+"""
 import re
 
 
@@ -32,7 +35,7 @@ def backup(connection, cmd, success):
         connection.enable()
         output = connection.send_command(cmd)
         msg += chkout(output, success)
-    except Exception as e:
-        msg += ("Failed!\n{}\n".format(e))
+    except Exception as error:
+        msg += ("Failed!\n{}\n".format(error))
 
     return msg

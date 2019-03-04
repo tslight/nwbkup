@@ -1,3 +1,8 @@
+"""
+Define success string to look for in output from commands
+"""
+
+
 def get_backup_success(connection):
     """
     Returns a success string that corresponds to the connection objects

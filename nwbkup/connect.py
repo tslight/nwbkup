@@ -1,3 +1,6 @@
+"""
+Connect to and backup devices
+"""
 import datetime
 import netmiko
 from .backup import backup

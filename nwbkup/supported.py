@@ -1,4 +1,12 @@
+"""
+Return list of supported devices.
+"""
+
+
 def get_supported():
+    """
+    Return list of supported devices.
+    """
     return [
         "a10",
         "accedian",
