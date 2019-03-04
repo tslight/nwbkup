@@ -8,7 +8,7 @@ from .commands import get_backup_cmd
 from .success import get_backup_success
 
 
-def connect_and_backup(target):
+def connect_and_backup(server, path, target):
     """
     Takes device name and ip address as arguments and transforms them into a
     tuple containing the connection object, the command one wants to run on the
@@ -16,8 +16,7 @@ def connect_and_backup(target):
     """
     msg = ("Connecting to {} at {}... ".format(
         target['device_type'], target['ip']))
-    path = datetime.datetime.now().strftime('/Network/'"%Y/%b/")
-    server = '10.1.0.6'
+    path = datetime.datetime.now().strftime(path + "/%Y/%b/")
 
     try:
         connection = netmiko.ConnectHandler(**target)
