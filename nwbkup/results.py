@@ -5,8 +5,8 @@ import datetime
 
 def write_log(results, path):
     """
-    Takes a filesystem path as an argument, and creates a csv using our log
-    list. Each element of the list is a row in the csv.
+    Takes a filesystem path as an argument, and creates a csv using the results
+    dictionary from parse_results.
     """
     logfile = datetime.datetime.now().strftime("/nwbkup-%H%M%S-%d%m%y.csv")
     logpath = path + logfile
@@ -23,6 +23,10 @@ def write_log(results, path):
 
 
 def parse_results(results):
+    """
+    Extract IP address from results and add to dictionary where key is IP
+    address and the the value is whether the command completed successfully.
+    """
     new_results = {}
     for r in results:
         print(r)

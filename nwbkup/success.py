@@ -1,4 +1,8 @@
 def get_backup_success(connection):
+    """
+    Returns a success string that corresponds to the connection objects
+    device_type.
+    """
     success_strings = {
         'cisco_ios': "bytes copied in",
         'fortinet': "Send config file to tftp server OK.",

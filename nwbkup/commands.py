@@ -1,4 +1,8 @@
 def get_backup_cmd(connection, server, path):
+    """
+    Return a backup command that corresponds to the connection objects
+    device_type.
+    """
     backup_commands = {
         'cisco_ios': ("copy running tftp://{}{}{}.cfg".format(
             server, path, connection.base_prompt.strip())),

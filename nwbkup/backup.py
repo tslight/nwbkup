@@ -2,6 +2,10 @@ import re
 
 
 def chkout(output, success):
+    """
+    Check output of command for success string and for a regex match with
+    failed or error. Return a string indicating success or failure.
+    """
     regex = ".*error.*|.*failed.*"
     failed = re.match(regex, output, re.IGNORECASE)
     if success not in output or failed:
