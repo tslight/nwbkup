@@ -48,10 +48,11 @@ def getargs():
     """
     Return a list of valid arguments. If no argument is given, default to $PWD.
     """
-    parser = argparse.ArgumentParser(
-        description=("Backup network devices listed in [SOURCE] csv.\n"
-                     "Each device is backed up to [TFTP SERVER/PATH].\n"
-                     "Output success or failure to [DESTINATION] csv.\n"))
+    parser = argparse.ArgumentParser(description=(
+        "Backup network devices listed in [SOURCE] csv.\n"
+        "Each device is backed up to [TFTP SERVER/PATH].\n"
+        "Output success or failure to [DESTINATION] csv.\n"
+    ))
     parser.add_argument("-s", "--source",
                         nargs='?',
                         default="./devices.csv",
