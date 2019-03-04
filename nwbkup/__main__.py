@@ -51,7 +51,6 @@ def getargs():
 
 
 def main():
-    # log = []
     args = getargs()
     targets = parse_csv(args.csv)
     if targets:
