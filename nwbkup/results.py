@@ -16,7 +16,7 @@ def write_log(results, path):
     try:
         with open(logpath, 'w') as csv_file:
             writer = csv.writer(csv_file)
-            writer.writerow(["IP", "Result"])
+            writer.writerow(["IP ADDRESS", "RESULT"])
             for key, value in results.items():
                 writer.writerow([key, value])
             csv_file.close()
