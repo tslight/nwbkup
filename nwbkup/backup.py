@@ -1,9 +1,9 @@
 """
 Connect to and backup devices
 """
-import datetime
 import netmiko
 import re
+from datetime import datetime
 from .commands import get_backup_cmd
 from .success import get_backup_success
 
@@ -27,7 +27,7 @@ def backup(server, path, target):
     and return result list.
     """
     result = [target['device_type'], target['ip']]
-    path = datetime.datetime.now().strftime(path + "/%Y/%b/")
+    path = datetime.now().strftime(path + "/%Y/%b/")
 
     try:
         connection = netmiko.ConnectHandler(**target)
