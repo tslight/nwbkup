@@ -22,9 +22,9 @@ def chkout(output, success):
 
 def backup(server, path, target):
     """
-    Takes device name and ip address as arguments and transforms them into a
-    tuple containing the connection object, the command one wants to run on the
-    device, and a string to gauge the success of the command by.
+    Construct backup command using dictionary from get_backup_cmd, success
+    string from get_backup_success dictionary. Run backup command using netmiko
+    and return result list.
     """
     result = [target['device_type'], target['ip']]
     path = datetime.datetime.now().strftime(path + "/%Y/%b/")
