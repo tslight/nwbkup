@@ -35,14 +35,14 @@ def backup(server, path, target):
         success = get_backup_success(connection)
         connection.enable()
         output = connection.send_command(cmd)
-        result = result + chkout(output, success)
+        result += chkout(output, success)
     except ValueError:
         error = "{} not supported.".format(target['device_type'])
-        result = result + ["Failed", error]
+        result += ["Failed", error]
     except KeyError:
         error = "Cannot find {}.".format(target['device_type'])
-        result = result + ["Failed", error]
+        result += ["Failed", error]
     except Exception as error:
-        result = result + ["Failed", error]
+        result += ["Failed", error]
 
     return result
