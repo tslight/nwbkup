@@ -1,7 +1,11 @@
 """
-Backup device
+Connect to and backup devices
 """
+import datetime
+import netmiko
 import re
+from .commands import get_backup_cmd
+from .success import get_backup_success
 
 
 def chkout(output, success):
@@ -16,22 +20,29 @@ def chkout(output, success):
     return ["Success", ""]
 
 
-def backup(connection, cmd, success):
+def backup(server, path, target):
     """
-    Takes a tuple or list of device details as an argument. First
-    element is the connection object returned from ConnectHandler,
-    second element is the backup command to run, and the last is the
-    string from the command's output that we are looking for to gauge
-    success.
+    Takes device name and ip address as arguments and transforms them into a
+    tuple containing the connection object, the command one wants to run on the
+    device, and a string to gauge the success of the command by.
+    """
+    result = [target['device_type'], target['ip']]
+    path = datetime.datetime.now().strftime(path + "/%Y/%b/")
 
-    Runs the command using the connection object and appends success status to
-    log based on return string from command and IP address.
-    """
     try:
+        connection = netmiko.ConnectHandler(**target)
+        cmd = get_backup_cmd(connection, server, path)
+        success = get_backup_success(connection)
         connection.enable()
         output = connection.send_command(cmd)
-        result = chkout(output, success)
+        result = result + chkout(output, success)
+    except ValueError:
+        error = "{} not supported.".format(target['device_type'])
+        result = result + ["Failed", error]
+    except KeyError:
+        error = "Cannot find {}.".format(target['device_type'])
+        result = result + ["Failed", error]
     except Exception as error:
-        result = ["Failed", error]
+        result = result + ["Failed", error]
 
     return result
