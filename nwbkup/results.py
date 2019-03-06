@@ -2,7 +2,7 @@
 Process results
 """
 import csv
-import datetime
+from datetime import datetime
 
 
 def write_results(results, path):
@@ -10,7 +10,7 @@ def write_results(results, path):
     Takes a filesystem path as an argument, and creates a csv using the results
     dictionary from parse_results.
     """
-    logfile = datetime.datetime.now().strftime("/nwbkup-%Y-%m-%d-%H.%M.%S.csv")
+    logfile = datetime.now().strftime("/nwbkup-%Y-%m-%d-%H.%M.%S.csv")
     logpath = path + logfile
 
     try:
