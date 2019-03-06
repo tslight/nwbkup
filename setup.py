@@ -9,7 +9,7 @@ setuptools.setup(
     description="Backup network device configs.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    install_requires=['netmiko'],
+    install_requires=['netmiko', 'columns'],
     packages=setuptools.find_packages(),
     classifiers=(
         "Programming Language :: Python :: 3",

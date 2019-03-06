@@ -47,9 +47,10 @@ def getargs():
         "Each device is backed up to [TFTP SERVER/PATH].\n"
         "Output success or failure to [DESTINATION] csv.\n"
     ))
+    parser.add_argument("-l", "--list",
+                        action='store_true',
+                        help="print a list of supported devices.")
     parser.add_argument("-s", "--source",
-                        nargs='?',
-                        default="./devices.csv",
                         type=chkfile,
                         help="a valid path to a csv file.")
     parser.add_argument("-d", "--destination",
@@ -58,13 +59,9 @@ def getargs():
                         type=chkdir,
                         help="Path to store the results csv in.")
     parser.add_argument("-t", "--tftp_server",
-                        nargs='?',
-                        default="10.1.0.6",
                         type=chkip,
                         help="TFTP IP or hostname to send the backups to.")
     parser.add_argument("-p", "--tftp_path",
-                        nargs='?',
-                        default="/Network",
                         type=str,
                         help="TFTP path to send the backups to.")
     return parser.parse_args()

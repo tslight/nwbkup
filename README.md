@@ -1,11 +1,11 @@
 A Netmiko wrapper program to automate configuration backup of various networking
 devices such as Cisco routers, HP Procurve switches and Fortinet firewalls.
 
-Use Csv to store table of devices to backup along with their details and write
-results back to a Csv file.
+Use csv file to store table of devices to backup, along with their details, and
+write results back to a csv file.
 
 ```
-usage: nwbkup [-h] [-s [SOURCE]] [-d [DESTINATION]] [-t [TFTP_SERVER]]
+usage: nwbkup [-h] [-l] [-s [SOURCE]] [-d [DESTINATION]] [-t [TFTP_SERVER]]
 			  [-p [TFTP_PATH]]
 
 Backup network devices listed in [SOURCE] csv. Each device is backed up to
@@ -13,6 +13,7 @@ Backup network devices listed in [SOURCE] csv. Each device is backed up to
 
 optional arguments:
   -h, --help            show this help message and exit
+  -l, --list            print a list of supported devices.
   -s [SOURCE], --source [SOURCE]
 						a valid path to a csv file.
   -d [DESTINATION], --destination [DESTINATION]

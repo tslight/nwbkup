@@ -3,10 +3,12 @@ Let's get this party started!
 """
 from multiprocessing.pool import ThreadPool
 from functools import partial
+from columns import prtcols
 from .args import getargs
 from .parse import parse_csv
 from .backup import backup
 from .results import write_results
+from .supported import get_supported
 
 
 def main():
@@ -16,6 +18,10 @@ def main():
     write results list returned from backup function to destination csv.
     """
     args = getargs()
+    if args.list:
+        prtcols(get_supported(), 4)
+        exit()
+
     targets = parse_csv(args.source)
     if targets:
         pool = ThreadPool(8)
