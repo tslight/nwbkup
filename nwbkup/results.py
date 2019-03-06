@@ -7,8 +7,8 @@ from datetime import datetime
 
 def write_results(results, path):
     """
-    Takes a filesystem path as an argument, and creates a csv using the results
-    dictionary from parse_results.
+    Takes a filesystem path as an argument, and creates a csv using each list
+    within the results object returned from the main backup function.
     """
     logfile = datetime.now().strftime("/nwbkup-%Y-%m-%d-%H.%M.%S.csv")
     logpath = path + logfile
