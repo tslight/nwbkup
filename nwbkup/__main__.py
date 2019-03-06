@@ -6,7 +6,6 @@ from functools import partial
 from .args import getargs
 from .parse import parse_csv
 from .backup import backup
-from .results import print_results
 from .results import write_results
 
 
@@ -25,7 +24,6 @@ def main():
         pool.close()
         pool.join()
         if results:
-            results = print_results(results)
             write_results(results, args.destination)
 
 
